@@ -1,18 +1,39 @@
 {
-    "name": "tolacika/laravel-cron-bundle",
-    "description": "This package is a hepler for crons without crontab",
-    "type": "library",
-    "require": {
-        "php": "^7.1.3",
-        "laravel/framework": "5.6.*",
-        "cron/cron": "^1.4"
-    },
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Tolacika",
-            "email": "1866861+tolacika@users.noreply.github.com"
-        }
-    ],
-    "minimum-stability": "dev"
+  "name": "tolacika/laravel-cron-bundle",
+  "description": "This package is a hepler for crons without crontab",
+  "keywords": [
+    "laravel",
+    "cron",
+    "supervisor",
+    "command"
+  ],
+  "license": "MIT",
+  "type": "library",
+  "authors": [
+    {
+      "name": "Tolacika",
+      "email": "1866861+tolacika@users.noreply.github.com"
+    }
+  ],
+  "minimum-stability": "dev",
+  "require": {
+    "php": "^7.1.3",
+    "laravel/framework": "5.6.*",
+    "cron/cron": "^1.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "Tolacika\\CronBundle\\": "src/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Tolacika\\CronBundle\\Providers\\QueueCronnerServiceProvider"
+      ]
+    }
+  },
+  "config": {
+    "sort-packages": true
+  }
 }
