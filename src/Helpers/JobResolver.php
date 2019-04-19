@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Tolacika\CronBundle\Cron;
+namespace Tolacika\CronBundle\Helpers;
 
 
 use Cron\Job\JobInterface;
@@ -10,7 +10,7 @@ use Cron\Resolver\ResolverInterface;
 use Cron\Schedule\CrontabSchedule;
 use Tolacika\CronBundle\Models\CronJob;
 
-class Resolver implements ResolverInterface
+class JobResolver implements ResolverInterface
 {
     /**
      * @var string|null

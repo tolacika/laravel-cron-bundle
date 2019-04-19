@@ -29,7 +29,7 @@
   "extra": {
     "laravel": {
       "providers": [
-        "Tolacika\\CronBundle\\Providers\\QueueCronnerServiceProvider"
+        "Tolacika\\CronBundle\\CronBundleServiceProvider"
       ]
     }
   },

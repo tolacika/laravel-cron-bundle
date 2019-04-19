@@ -4,6 +4,7 @@ namespace Tolacika\CronBundle\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Tolacika\CronBundle\Commands\CronListCommand;
 
 /**
  * Tolacika\CronBundle\Models\CronJob
@@ -12,11 +13,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $name
  * @property string $command
  * @property string $schedule
- * @property string $description
+ * @property string|null $description
  * @property bool $enabled
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
  * @property string|null $deleted_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Tolacika\CronBundle\Models\CronLog[] $logs
  * @property-read \Illuminate\Database\Eloquent\Collection|\Tolacika\CronBundle\Models\CronReport[] $reports
  * @method static bool|null forceDelete()
  * @method static \Illuminate\Database\Query\Builder|\Tolacika\CronBundle\Models\CronJob onlyTrashed()
@@ -40,11 +42,29 @@ class CronJob extends Model
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function logs()
+    {
+        return $this->hasMany(CronLog::class, 'job_id', 'id');
+    }
+
+    /**
      * @return bool
      */
     public function isEnabled()
     {
         return $this->enabled == '1';
+    }
+
+    public function getCommandPart()
+    {
+        return explode(' ', $this->command, 2)[0];
+    }
+
+    public function getArgumentPart()
+    {
+        return explode(' ', $this->command, 2)[1] ?? '';
     }
 
     /**

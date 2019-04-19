@@ -5,7 +5,7 @@ namespace Tolacika\CronBundle\Commands;
 use Cron\Cron;
 use Cron\Executor\Executor;
 use Illuminate\Console\Command;
-use Tolacika\CronBundle\Cron\Resolver;
+use Tolacika\CronBundle\Helpers\JobResolver;
 use Tolacika\CronBundle\Models\CronReport;
 
 class CronExecutorCommand extends Command
@@ -47,7 +47,7 @@ class CronExecutorCommand extends Command
 
         $cron->setExecutor(new Executor());
 
-        $resolver = new Resolver();
+        $resolver = new JobResolver();
         if ($this->hasOption('job')) {
             $resolver->setJobName($this->option('job'));
         }

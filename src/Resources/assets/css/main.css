@@ -1,0 +1,31 @@
+#cron-bundle {
+    background-color: #EBEBEB;
+}
+
+#cron-bundle .container {
+    border-radius: 6px;
+    background-color: #F9F9F9;
+}
+
+#cron-bundle .container table th,
+#cron-bundle .container table td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+#cron-bundle .container > h1 small:before {
+    content: "\2014\00A0";
+}
+
+#cron-bundle .container form .input-group .input-group-addon span {
+    border-radius: 0;
+}
+
+#cron-bundle .container form .input-group .input-group-addon {
+    margin-left: -1px;
+    margin-right: -1px;
+}
+
+#cron-bundle .container form .form-control.command-input {
+
+}

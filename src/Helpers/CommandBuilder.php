@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Tolacika\CronBundle\Cron;
+namespace Tolacika\CronBundle\Helpers;
 
 
 use Symfony\Component\Process\PhpExecutableFinder;

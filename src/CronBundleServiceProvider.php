@@ -1,6 +1,6 @@
 <?php
 
-namespace Tolacika\CronBundle\Providers;
+namespace Tolacika\CronBundle;
 
 use Illuminate\Support\ServiceProvider;
 use Tolacika\CronBundle\Commands\CronCreateCommand;
@@ -11,8 +11,9 @@ use Tolacika\CronBundle\Commands\CronExecutorCommand;
 use Tolacika\CronBundle\Commands\CronListCommand;
 use Tolacika\CronBundle\Commands\CronStartCommand;
 use Tolacika\CronBundle\Commands\CronStopCommand;
+use Tolacika\CronBundle\Http\Controllers\CronBundleController;
 
-class QueueCronnerServiceProvider extends ServiceProvider
+class CronBundleServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap services.
@@ -21,8 +22,11 @@ class QueueCronnerServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //$this->loadRoutesFrom(__DIR__ . "/../routes.php");
-        $this->loadMigrationsFrom(__DIR__ . '/../Migrations');
+        $this->app->make(CronBundleController::class);
+        $this->loadViewsFrom(__DIR__ . "/Resources/Views", 'cron-bundle');
+        $this->loadRoutesFrom(__DIR__ . "/routes.php");
+
+        $this->loadMigrationsFrom(__DIR__ . '/Migrations');
 
         $this->commands([
             CronExecutorCommand::class,
@@ -34,6 +38,11 @@ class QueueCronnerServiceProvider extends ServiceProvider
             CronEnableCommand::class,
             CronDisableCommand::class,
         ]);
+
+        $this->publishes([
+            __DIR__ . "/Resources/config.php" => config_path("cron-bundle.php"),
+        ], 'config');
+
     }
 
     /**
@@ -43,6 +52,6 @@ class QueueCronnerServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->mergeConfigFrom(__DIR__ . "/Resources/config.php", 'cron-bundle');
     }
 }

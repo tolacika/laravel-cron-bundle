@@ -18,7 +18,7 @@ class CreateCronJobsTable extends Migration
             $table->string('name', 50);
             $table->string('command', 191);
             $table->string('schedule', 50);
-            $table->string('description', 191);
+            $table->string('description', 191)->nullable()->default(null);
             $table->tinyInteger('enabled');
             $table->timestamps();
             $table->softDeletes();
