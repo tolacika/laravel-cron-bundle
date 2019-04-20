@@ -8,6 +8,8 @@ With this package you can replace the default crontable. Or the Laravel's schedu
 
 - Laravel 5.6
 
+If you have problems with other versions please submit an issue.
+
 ## Installion
 
 Use composer to install CronBundle packages:
