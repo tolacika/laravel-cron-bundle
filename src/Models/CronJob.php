@@ -34,6 +34,9 @@ class CronJob extends Model
 
     protected $table = 'cron_jobs';
 
+    /**
+     * Sets the Event listeners for logging of created, updated and deleted actions
+     */
     protected static function boot()
     {
         static::created(function (CronJob $job) {
@@ -52,6 +55,8 @@ class CronJob extends Model
     }
 
     /**
+     * Returns the CronReports of the job
+     *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function reports()
@@ -60,6 +65,8 @@ class CronJob extends Model
     }
 
     /**
+     * Returns the CronLogs of the job
+     *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function logs()
@@ -68,6 +75,8 @@ class CronJob extends Model
     }
 
     /**
+     * Returns if the job is enabled
+     *
      * @return bool
      */
     public function isEnabled()
@@ -75,11 +84,21 @@ class CronJob extends Model
         return $this->enabled == '1';
     }
 
+    /**
+     * Returns the first part of a command
+     *
+     * @return string
+     */
     public function getCommandPart()
     {
         return explode(' ', $this->command, 2)[0];
     }
 
+    /**
+     * Returns the arguments part of a command
+     *
+     * @return string
+     */
     public function getArgumentPart()
     {
         return explode(' ', $this->command, 2)[1] ?? '';
@@ -96,6 +115,8 @@ class CronJob extends Model
     }
 
     /**
+     * Returns a collection of jobs, even if it is trashed
+     *
      * @param bool $showDeleted
      * @return \Illuminate\Database\Eloquent\Collection|CronJob[]
      */
@@ -108,6 +129,8 @@ class CronJob extends Model
     }
 
     /**
+     * Searches a job based by name
+     *
      * @param string|null $jobName
      * @param bool $force
      * @return \Illuminate\Database\Eloquent\Collection|CronJob[]
@@ -123,6 +146,8 @@ class CronJob extends Model
     }
 
     /**
+     * Finds a job based by id
+     *
      * @param $jobId
      * @return \Illuminate\Database\Eloquent\Collection|Model|CronJob|CronJob[]|null
      */

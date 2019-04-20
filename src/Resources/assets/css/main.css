@@ -29,3 +29,11 @@
 #cron-bundle .container .accordion .card-header {
     cursor: pointer;
 }
+
+.pull-right {
+    float: right
+}
+
+.pull-left {
+    float: left
+}

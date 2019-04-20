@@ -16,6 +16,12 @@ class CommandBuilder
      */
     private function __construct() { }
 
+    /**
+     * Build the command string for cron worker
+     *
+     * @param string $command
+     * @return string
+     */
     public static function build(string $command)
     {
         if (self::$phpExecutable == null) {
@@ -26,6 +32,13 @@ class CommandBuilder
         return sprintf("%s %s %s", self::$phpExecutable, $_SERVER['SCRIPT_NAME'], $command);
     }
 
+    /**
+     * Returns the artisan command's script name
+     *
+     * Todo: Refactor needed
+     *
+     * @return mixed
+     */
     public static function getScriptName()
     {
         return $_SERVER['SCRIPT_NAME'];

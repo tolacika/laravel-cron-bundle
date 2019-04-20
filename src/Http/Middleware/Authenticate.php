@@ -9,7 +9,9 @@ use Tolacika\CronBundle\CronBundle;
 class Authenticate
 {
     /**
-     * Handle the incoming request.
+     * Authenticates the incoming request.
+     *
+     * @see https://github.com/tolacika/laravel-cron-bundle/#authenticating-to-dashboard
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next

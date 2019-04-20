@@ -26,6 +26,8 @@ class CronReport extends Model
     protected $table = 'cron_reports';
 
     /**
+     * Returns the related CronJob
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function job()
@@ -34,6 +36,8 @@ class CronReport extends Model
     }
 
     /**
+     * Saves the reports from the CronExecutor
+     *
      * @param ReportInterface[] $reports
      */
     public static function saveReports(array $reports)

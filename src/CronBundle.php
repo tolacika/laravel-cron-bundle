@@ -70,6 +70,8 @@ class CronBundle
     }
 
     /**
+     * This is just a helper for predefined schedules.
+     *
      * @return array
      */
     public static function getPredefinedSchedules()
@@ -85,6 +87,8 @@ class CronBundle
     }
 
     /**
+     * Get all commands from whitelist or all command which not in blacklist
+     *
      * @return \Illuminate\Support\Collection
      */
     public static function getAvailableCommands()
@@ -119,6 +123,8 @@ class CronBundle
     }
 
     /**
+     * Checks the command availability in the black/whitelist
+     *
      * @param $command
      * @return bool
      */

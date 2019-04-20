@@ -42,46 +42,55 @@ class CronCreateCommand extends Command
     {
         $job = new CronJob();
 
+        // Asking for job name
         $this->output->writeln('');
         $this->output->writeln('The unique name how the job will be referenced.');
         $job->name = $this->askRecursive("Cron job name", function ($name) {
             if (!$name || strlen($name) == 0) {
+                // Invalid if empty
                 throw new \InvalidArgumentException('Please set a name.');
             }
 
             if (CronJob::getJobsByName($name, true)->isNotEmpty()) {
+                // Invalid if already in use (Excepts deleted)
                 throw new \InvalidArgumentException('Name already in use.');
             }
 
             return $name;
         });
 
-
+        // Asking for job command
         $this->output->writeln('');
         $this->output->writeln('<info>The command to execute. You may add extra arguments.</info>');
         $job->command = $this->askRecursive("Command", function ($command) {
+            // Invalid if can't find through application
             $this->getApplication()->get($command);
 
             return $command;
         });
 
+        // Asking for job schedule
         $this->output->writeln('');
         $this->output->writeln('<info>The schedule in the crontab syntax.</info>');
         $job->schedule = $this->askRecursive("Schedule", function ($schedule) {
             $validator = new CrontabValidator();
             try {
+                // Invalid if CrontabValidator can't validate
                 $validator->validate($schedule);
             } catch (InvalidPatternException $ex) {
+                // Transform InvalidPatternException to InvalidArgumentException
                 throw new \InvalidArgumentException($ex->getMessage());
             }
 
             return $schedule;
         });
 
+        // Asking for job description (optional)
         $this->output->writeln('');
         $this->output->writeln('<info>Some more information about the job.</info>');
         $job->description = $this->askRecursive("Description");
 
+        // Asking for job enabled state
         $this->output->writeln('');
         $this->output->writeln('<info>Should the cron be enabled.</info>');
         $job->enabled = $this->confirm("Enabled", true) ? '1' : '0';
@@ -94,6 +103,14 @@ class CronCreateCommand extends Command
         return 0;
     }
 
+    /**
+     * Asking recursively the given question
+     * It's catches all InvalidArgumentException to give a retry for the user
+     *
+     * @param string $question
+     * @param \Closure|null $validateClosure
+     * @return mixed|string
+     */
     private function askRecursive(string $question, ?\Closure $validateClosure = null)
     {
         while (true) {

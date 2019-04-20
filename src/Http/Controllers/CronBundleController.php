@@ -28,7 +28,8 @@ class CronBundleController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
+     * Display a listing all Jobs.
+     * Optionally with the deleted jobs.
      *
      * @return \Illuminate\Http\Response
      */
@@ -40,7 +41,7 @@ class CronBundleController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new job.
      *
      * @return \Illuminate\Http\Response
      */
@@ -50,7 +51,7 @@ class CronBundleController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created job in database.
      *
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
@@ -66,26 +67,31 @@ class CronBundleController extends Controller
 
         $validator->after(function ($validator) use ($request) {
             /** @var Validator $validator */
+
+            // Validates the name of the new job, adds an error if the name already in use.
             if ($request->has('name') && !empty($request->get('name', ''))) {
                 if (CronJob::where('name', $request->get('name'))->count() > 0) {
                     $validator->errors()->add('name', trans('validation.unique', ['attribute' => 'name']));
                 }
             }
 
-
+            // Validates the command and arguments
             $fullCommand = $baseCommand = trim($request->get('command'));
             if (!empty($baseCommand)) {
                 if (!CronBundle::isCommandAllowed($baseCommand)) {
+                    // Add error if the command is in blacklist or not in whitelist
                     $validator->errors()->add("command", "The command is not allowed");
                 }
                 if ($request->has('args') && !empty($request->get('args', ''))) {
                     $fullCommand .= " " . trim($request->get('args'));
                 }
                 if (mb_strlen($fullCommand) >= 191) {
+                    // Add an error if the full command's length is greater than the database field length
                     $validator->errors()->add("command", trans('validation.max.string', ['attribute' => 'command', 'max' => '191']));
                 }
             }
 
+            // Validates schedule based by CronTableValidator
             if ($request->has('schedule') && !empty($request->get('schedule', ''))) {
                 $cronValidator = new CrontabValidator();
                 try {
@@ -106,6 +112,7 @@ class CronBundleController extends Controller
             $fullCommand .= " " . trim($request->get('args'));
         }
 
+        // Creates a new job
         $job = new CronJob();
         $job->name = $request->get('name');
         $job->command = $fullCommand;
@@ -119,7 +126,7 @@ class CronBundleController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified job.
      *
      * @param $jobId
      * @return \Illuminate\Http\Response
@@ -135,7 +142,7 @@ class CronBundleController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for editing the specified job.
      *
      * @param $jobId
      * @return \Illuminate\Http\Response
@@ -165,14 +172,18 @@ class CronBundleController extends Controller
 
         $validator->after(function ($validator) use ($request, $job) {
             /** @var Validator $validator */
+
+            // Validates the name of the new job, adds an error if the name already in use.
             if ($request->has('name') && !empty($request->get('name', ''))) {
                 if (CronJob::where('name', $request->get('name'))->where('id', '!=', $job->id)->count() > 0) {
                     $validator->errors()->add('name', trans('validation.unique', ['attribute' => 'name']));
                 }
             }
 
+            // Validates the command and arguments
             $fullCommand = $baseCommand = trim($request->get('command'));
             if (!empty($baseCommand)) {
+                // Add error if the command is in blacklist or not in whitelist
                 if (!CronBundle::isCommandAllowed($baseCommand)) {
                     $validator->errors()->add("command", "The command is not allowed");
                 }
@@ -180,10 +191,12 @@ class CronBundleController extends Controller
                     $fullCommand .= " " . trim($request->get('args'));
                 }
                 if (mb_strlen($fullCommand) >= 191) {
+                    // Add an error if the full command's length is greater than the database field length
                     $validator->errors()->add("command", trans('validation.max.string', ['attribute' => 'command', 'max' => '191']));
                 }
             }
 
+            // Validates schedule based by CronTableValidator
             if ($request->has('schedule') && !empty($request->get('schedule', ''))) {
                 $cronValidator = new CrontabValidator();
                 try {
@@ -204,6 +217,7 @@ class CronBundleController extends Controller
             $fullCommand .= " " . trim($request->get('args'));
         }
 
+        // Edits the job
         $job->name = $request->get('name');
         $job->command = $fullCommand;
         $job->schedule = $request->get('schedule');
@@ -216,7 +230,7 @@ class CronBundleController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified job from storage with soft delete.
      *
      * @param Request $request
      * @param CronJob $job
@@ -269,6 +283,8 @@ class CronBundleController extends Controller
     }
 
     /**
+     * Returns the job report output for the job details page
+     *
      * @param CronReport $report
      * @return \Illuminate\Http\Response
      */

@@ -40,27 +40,33 @@ class CronEnableCommand extends Command
     public function handle()
     {
         $jobId = $this->input->getArgument('job');
+        // Finding job by id
         $job = CronJob::findById($jobId);
 
         if ($job == null) {
+            // If not found try to find job by name
             $job = CronJob::getJobsByName($jobId)->first();
         }
 
         if($job == null) {
+            // If not found throws Exception
             throw new \InvalidArgumentException("Unknown job: " . $jobId);
         }
 
         if ($job->isEnabled()) {
+            // If the job is enabled throws an exception
             throw new \InvalidArgumentException("The job is already enabled!");
         }
 
         $this->output->writeln(sprintf('<info>You are about to enable "%s".</info>', $job->name));
 
+        // Enabling confirm
         if (!$this->confirm("Enable this job?", false)) {
             $this->output->writeln("<error>Enabling aborted</error>");
             return 0;
         }
 
+        // Enabling the job
         $job->enabled = '1';
         $job->save();
 

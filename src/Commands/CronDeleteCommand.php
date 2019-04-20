@@ -36,26 +36,33 @@ class CronDeleteCommand extends Command
      * Execute the console command.
      *
      * @return mixed
+     * @throws \Exception
      */
     public function handle()
     {
         $jobId = $this->input->getArgument('job');
+
+        // Finding job by id
         $job = CronJob::findById($jobId);
 
         if ($job == null) {
+            // If not found try to find job by name
             $job = CronJob::getJobsByName($jobId)->first();
         }
 
         if($job == null) {
+            // If not found throws Exception
             throw new \InvalidArgumentException("Unknown job: " . $jobId);
         }
 
         if ($job->isEnabled()) {
+            // If the job isn't disabled throws an exception
             throw new \InvalidArgumentException("The job should be disabled first!");
         }
 
         $this->output->writeln(sprintf('<info>You are about to delete "%s".</info>', $job->name));
 
+        // Deletion confirm
         if (!$this->confirm("Delete this job?", false)) {
             $this->output->writeln("<error>Deleting aborted</error>");
             return 0;

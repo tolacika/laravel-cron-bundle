@@ -12,6 +12,8 @@ use Tolacika\CronBundle\Models\CronLog;
 class JobLogger
 {
     /**
+     * Universally creates a log entry based by config
+     *
      * @param $action
      * @param CronJob $job
      */
@@ -41,6 +43,8 @@ class JobLogger
     }
 
     /**
+     * Creates a database entry based by config
+     *
      * @param $action
      * @param CronJob $job
      * @param $logConfig
@@ -58,17 +62,37 @@ class JobLogger
         $job->logs()->save($log);
     }
 
+    /**
+     * Creates a Laravel log entry based by cofig
+     *
+     * Todo: Implement
+     *
+     * @param $action
+     * @param CronJob $job
+     * @param $logConfig
+     */
     private static function createLaravelLogEntry($action, CronJob $job, $logConfig)
     {
         throw new \Exception("Not implemented yet.");
     }
 
+    /**
+     * Creates a file based log entry based by cofig
+     *
+     * Todo: Implement
+     *
+     * @param $action
+     * @param CronJob $job
+     * @param $logConfig
+     */
     private static function createFileLogEntry($action, CronJob $job, $logConfig)
     {
         throw new \Exception("Not implemented yet.");
     }
 
     /**
+     * Returns the changes of a Job
+     *
      * @param CronJob $job
      * @return array
      */
@@ -88,6 +112,10 @@ class JobLogger
     }
 
     /**
+     * Formats attribute
+     *
+     * Needs to convert Carbon to string
+     *
      * @param CronJob $job
      * @param $attr
      * @return mixed|string

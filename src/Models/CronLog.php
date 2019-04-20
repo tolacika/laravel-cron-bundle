@@ -25,6 +25,8 @@ class CronLog extends Model
     protected $table = 'cron_logs';
 
     /**
+     * Returns the related CronJob
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function job()
@@ -32,6 +34,12 @@ class CronLog extends Model
         return $this->belongsTo(CronJob::class, 'job_id', 'id');
     }
 
+    /**
+     * Generates the template for the modifies logs
+     *
+     * @return string
+     * @throws \Throwable
+     */
     public function formatModifies()
     {
         if ($this->type == 'destroy') {

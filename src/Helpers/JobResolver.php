@@ -42,6 +42,8 @@ class JobResolver implements ResolverInterface
     }
 
     /**
+     * Creates a new ShellJob from CronBundle's job
+     *
      * @param CronJob $cronJob
      * @return ShellJob
      */
@@ -56,6 +58,8 @@ class JobResolver implements ResolverInterface
     }
 
     /**
+     * Name setter for filtering
+     *
      * @param string|null $jobName
      */
     public function setJobName(?string $jobName): void
@@ -64,6 +68,8 @@ class JobResolver implements ResolverInterface
     }
 
     /**
+     * Force setter for filtering
+     *
      * @param bool $force
      */
     public function setForce(bool $force): void
