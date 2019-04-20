@@ -17,7 +17,7 @@ class CreateCronLogsTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedInteger('job_id');
             $table->string('type', 30);
-            $table->string('modified');
+            $table->text('modified');
             $table->integer("user_id")->nullable()->default(null);
             $table->timestamps();
         });

@@ -12,6 +12,7 @@ use Response;
 use Tolacika\CronBundle\CronBundle;
 use Tolacika\CronBundle\Http\Middleware\Authenticate;
 use Tolacika\CronBundle\Models\CronJob;
+use Tolacika\CronBundle\Models\CronReport;
 
 class CronBundleController extends Controller
 {
@@ -31,9 +32,11 @@ class CronBundleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('cron-bundle::index');
+        $showDeleted = !!$request->get('showDeleted', false);
+
+        return view('cron-bundle::index', ['showDeleted' => $showDeleted]);
     }
 
     /**
@@ -118,22 +121,29 @@ class CronBundleController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param int $id
+     * @param $jobId
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($jobId)
     {
-        //
+        $job = CronJob::withTrashed()->find($jobId);
+        if (!$job) {
+            abort(404);
+        }
+
+        return view('cron-bundle::show', ['job' => $job]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param int $id
+     * @param $jobId
      * @return \Illuminate\Http\Response
      */
-    public function edit(CronJob $job)
+    public function edit($jobId)
     {
+        $job = CronJob::withTrashed()->find($jobId);
+
         return view('cron-bundle::edit', ['job' => $job]);
     }
 
@@ -141,7 +151,7 @@ class CronBundleController extends Controller
      * Update the specified resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @param int $id
+     * @param CronJob $job
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, CronJob $job)
@@ -201,19 +211,27 @@ class CronBundleController extends Controller
         $job->enabled = $request->has('enabled') ? '1' : '0';
 
         $job->save();
-        
+
         return redirect(route('cron-bundle.index'))->with('success', "The job saved successfully");
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param int $id
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param CronJob $job
+     * @return void
+     * @throws \Exception
      */
-    public function destroy($id)
+    public function destroy(Request $request, CronJob $job)
     {
-        //
+        if ($request->isMethod("POST")) {
+            $job->delete();
+
+            return redirect(route('cron-bundle.index'))->with('success', "The job deleted successfully");
+        }
+
+        return view('cron-bundle::destroy', ['job' => $job]);
     }
 
     /**
@@ -248,5 +266,14 @@ class CronBundleController extends Controller
         }
 
         return Response::make(file_get_contents($filename))->header("Content-type", "text/css");
+    }
+
+    /**
+     * @param CronReport $report
+     * @return \Illuminate\Http\Response
+     */
+    public function reportOutput(CronReport $report)
+    {
+        return Response::make($report->output)->header('Content-type', 'text-plain');
     }
 }

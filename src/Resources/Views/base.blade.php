@@ -8,6 +8,8 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+    <meta name="report-output-url" content="{{ route('cron-bundle.report-output', ['']) }}">
+
     <title>
         @yield('page-title', 'CronBundle')
     </title>
@@ -36,7 +38,7 @@
     </div>
 </div>
 
-<script src="{{ route('cron-bundle.assets.js', ['file' => "jquery-3.3.1.slim.min.js"]) }}"></script>
+<script src="{{ route('cron-bundle.assets.js', ['file' => "jquery-3.3.1.min.js"]) }}"></script>
 <script src="{{ route('cron-bundle.assets.js', ['file' => "popper.min.js"]) }}"></script>
 <script src="{{ route('cron-bundle.assets.js', ['file' => "bootstrap.min.js"]) }}"></script>
 <script src="{{ route('cron-bundle.assets.js', ['file' => "main.js"]) }}"></script>

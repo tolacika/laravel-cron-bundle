@@ -26,6 +26,6 @@
     margin-right: -1px;
 }
 
-#cron-bundle .container form .form-control.command-input {
-
+#cron-bundle .container .accordion .card-header {
+    cursor: pointer;
 }

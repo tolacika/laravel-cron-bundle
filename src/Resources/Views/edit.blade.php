@@ -5,6 +5,7 @@
 
 @section('content')
     <form method="POST" action="{{ route('cron-bundle.update', [$job]) }}">
+        @if($job->trashed()) <fieldset disabled=""> @endif
         {{ csrf_field() }}
         @if(isset($errors))
             @foreach($errors->all() as $msg)
@@ -73,9 +74,15 @@
             </div>
         </div>
         <div class="form-group">
-            <button type="submit" class="btn btn-success">Save</button>
-            <a href="{{ route('cron-bundle.index') }}" class="btn btn-default">Cancel</a>
-            <a href="{{ route('cron-bundle.destroy', [$job]) }}" class="btn btn-danger">Delete</a>
+            @if ($job->trashed())
+                <p>The job was deleted before</p>
+                <p><a href="{{ route('cron-bundle.index', ['showDeleted' => true]) }}">Go back</a></p>
+            @else
+                <button type="submit" class="btn btn-success">Save</button>
+                <a href="{{ route('cron-bundle.index') }}" class="btn btn-default">Cancel</a>
+                <a href="{{ route('cron-bundle.destroy', [$job]) }}" class="btn btn-danger">Delete</a>
+            @endif
         </div>
+        @if($job->trashed()) </fieldset> @endif
     </form>
 @endsection

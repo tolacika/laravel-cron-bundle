@@ -31,4 +31,15 @@ class CronLog extends Model
     {
         return $this->belongsTo(CronJob::class, 'job_id', 'id');
     }
+
+    public function formatModifies()
+    {
+        if ($this->type == 'destroy') {
+            return 'Job deleted.';
+        }
+
+        $changes = json_decode($this->modified, true);
+
+        return view('cron-bundle::changes', ['changes' => $changes])->render();
+    }
 }

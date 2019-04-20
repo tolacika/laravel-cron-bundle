@@ -14,8 +14,7 @@ Route::namespace("Tolacika\CronBundle\Http\Controllers")
          Route::get('/{job}/destroy', 'CronBundleController@destroy')->name('destroy');
          Route::post('/{job}/destroy', 'CronBundleController@destroy')->name('destroy');
 
-         Route::get('/assets/js/{file}', 'CronBundleController@assetjs')
-              ->name('assets.js');
-         Route::get('/assets/css/{file}', 'CronBundleController@assetcss')
-              ->name('assets.css');
+         Route::get('/assets/js/{file}', 'CronBundleController@assetjs')->name('assets.js');
+         Route::get('/assets/css/{file}', 'CronBundleController@assetcss')->name('assets.css');
+         Route::get('/report-output/{report}', 'CronBundleController@reportOutput')->name('report-output');
      });
