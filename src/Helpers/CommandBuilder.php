@@ -13,8 +13,6 @@ class CommandBuilder
 
     /**
      * CommandBuilders constructor.
-     *
-     * @param string $command
      */
     private function __construct() { }
 
@@ -26,5 +24,10 @@ class CommandBuilder
         }
 
         return sprintf("%s %s %s", self::$phpExecutable, $_SERVER['SCRIPT_NAME'], $command);
+    }
+
+    public static function getScriptName()
+    {
+        return $_SERVER['SCRIPT_NAME'];
     }
 }
