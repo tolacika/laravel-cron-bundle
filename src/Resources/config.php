@@ -71,6 +71,34 @@ return [
      */
     'filterType' => 'whitelist',
 
+    'defaultCronOutput' => 'database',
+
+    'cronOutputs' => [
+        'none' => [],
+
+        'database' => [
+            'truncate' => false,
+        ],
+
+        'laravelLog' => [
+            'prefix'  => 'CronBundle',
+            'logFormat' => '[%datetime%][%prefix%][userId:%userId%][jobId:%jobId%][jobName:%jobName%][runTime:%runTime%][exitCode:%exitCode%] Output: %output%',
+            'truncate' => false,
+        ],
+
+        'file' => [
+            'path' => storage_path('logs/cron-bundle/output.log'),
+            'truncate' => false,
+        ],
+
+        'singleFile' => [
+            'dirPath' => storage_path('logs/cron-bundle/outputs/'),
+            'fileFormat' => '%datetime%_%jobId%_%jobName%_output.log',
+            'truncate' => false,
+        ],
+    ],
+
+
     /*
     |--------------------------------------------------------------------------
     |  Log driver for changes
@@ -114,11 +142,18 @@ return [
         |  Log driver: laravelLog
         |--------------------------------------------------------------------------
         |
-        | Todo:implement
-        |
         | With this option the package will log all the changes to laravel.log,
         | which are defined in `actions` config.
         | Prefixes can be set in `prefix`
+        |
+        | log format placeholders:
+        |  - prefix
+        |  - datetime: format: Y-m-d H:i:s
+        |  - userId: Given user id by CronBundle::setUser()
+        |  - jobId
+        |  - jobName
+        |  - action: create, update or destroy
+        |  - changes
         |
          */
         'laravelLog' => [
