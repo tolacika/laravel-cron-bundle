@@ -71,26 +71,90 @@ return [
      */
     'filterType' => 'whitelist',
 
+    /*
+    |--------------------------------------------------------------------------
+    |  Log driver for cron outputs
+    |--------------------------------------------------------------------------
+    |
+    | Log drivers may be none, database, laravelLog or file
+    |
+     */
     'defaultCronOutput' => 'database',
 
     'cronOutputs' => [
+        /*
+        |--------------------------------------------------------------------------
+        |  Log driver: none
+        |--------------------------------------------------------------------------
+        |
+        | With this option the package will not log any information
+        |
+         */
         'none' => [],
 
+        /*
+        |--------------------------------------------------------------------------
+        |  Log driver: database
+        |--------------------------------------------------------------------------
+        |
+        | With this option the package will log all the outputs to database,
+        | You can truncate the output
+        |
+         */
         'database' => [
             'truncate' => false,
         ],
 
+        /*
+        |--------------------------------------------------------------------------
+        |  Log driver: laravelLog
+        |--------------------------------------------------------------------------
+        |
+        | With this option the package will log all the changes to laravel.log,
+        | Prefixes can be set in `prefix`
+        |
+        | log format placeholders:
+        |  - prefix
+        |  - datetime: format: Y-m-d H:i:s
+        |  - userId: Given user id by CronBundle::setUser()
+        |  - jobId
+        |  - jobName
+        |  - runTime
+        |  - exitCode
+        |  - output
+        |
+        | You can truncate the output
+        |
+         */
         'laravelLog' => [
             'prefix'  => 'CronBundle',
             'logFormat' => '[%datetime%][%prefix%][userId:%userId%][jobId:%jobId%][jobName:%jobName%][runTime:%runTime%][exitCode:%exitCode%] Output: %output%',
             'truncate' => false,
         ],
 
+        /*
+        |--------------------------------------------------------------------------
+        |  Log driver: file
+        |--------------------------------------------------------------------------
+        |
+        | With this option the package will log all the outputs to a file
+        | You can truncate the output
+        |
+         */
         'file' => [
             'path' => storage_path('logs/cron-bundle/output.log'),
             'truncate' => false,
         ],
 
+        /*
+        |--------------------------------------------------------------------------
+        |  Log driver: singleFile
+        |--------------------------------------------------------------------------
+        |
+        | With this option the package will log all the outputs to multiple files
+        | You can truncate the output
+        |
+         */
         'singleFile' => [
             'dirPath' => storage_path('logs/cron-bundle/outputs/'),
             'fileFormat' => '%datetime%_%jobId%_%jobName%_output.log',
