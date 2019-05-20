@@ -5,6 +5,7 @@ namespace Tolacika\CronBundle\Commands;
 use Cron\Exception\InvalidPatternException;
 use Cron\Validator\CrontabValidator;
 use Illuminate\Console\Command;
+use Tolacika\CronBundle\CronBundle;
 use Tolacika\CronBundle\Models\CronJob;
 
 class CronCreateCommand extends Command
@@ -65,6 +66,10 @@ class CronCreateCommand extends Command
         $job->command = $this->askRecursive("Command", function ($command) {
             // Invalid if can't find through application
             $this->getApplication()->get($command);
+
+            if (!CronBundle::isCommandAllowed($command)) {
+                throw new \InvalidArgumentException("Command not allowed");
+            }
 
             return $command;
         });
