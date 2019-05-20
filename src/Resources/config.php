@@ -79,9 +79,9 @@ return [
     | Log drivers may be none, database, laravelLog or file
     |
      */
-    'log' => 'database',
+    'defaultChangeLog' => 'database',
 
-    'logTypes' => [
+    'changeLogDrivers' => [
         /*
         |--------------------------------------------------------------------------
         |  Log driver: none
@@ -123,27 +123,7 @@ return [
          */
         'laravelLog' => [
             'prefix'  => 'CronBundle',
-            'actions' => [
-                'create',
-                'update',
-                'destroy',
-            ],
-        ],
-
-        /*
-        |--------------------------------------------------------------------------
-        |  Log driver: laravelLog
-        |--------------------------------------------------------------------------
-        |
-        | Todo:implement
-        |
-        | With this option the package will log all the changes to a custom file,
-        | which are defined in `actions` config.
-        | Path can be set in `path`, e.g.: `storage_path('logs/cron-bundle.log')`
-        |
-         */
-        'file' => [
-            'path'    => storage_path('logs/cron-bundle.log'),
+            'logFormat' => '[%datetime%][%prefix%][userId:%userId%][jobId:%jobId%][jobName:%jobName%][action:%action%] Changes: %changes%',
             'actions' => [
                 'create',
                 'update',

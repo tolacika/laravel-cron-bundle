@@ -19,13 +19,13 @@ class JobLogger
      */
     public static function createLogEntry($action, CronJob $job)
     {
-        $availableModes = array_keys(config('cron-bundle.logTypes'));
-        $logMode = config('cron-bundle.log');
+        $availableModes = array_keys(config('cron-bundle.changeLogDrivers'));
+        $logMode = config('cron-bundle.defaultChangeLog');
         if (!in_array($logMode, $availableModes)) {
             throw new \InvalidArgumentException("There are no such logging mode: " . $logMode);
         }
 
-        $logConfig = config('cron-bundle.logTypes.' . $logMode);
+        $logConfig = config('cron-bundle.changeLogDrivers.' . $logMode);
 
         switch ($logMode) {
             case 'none':
@@ -35,9 +35,6 @@ class JobLogger
                 break;
             case 'laravelLog':
                 self::createLaravelLogEntry($action, $job, $logConfig);
-                break;
-            case 'file':
-                self::createFileLogEntry($action, $job, $logConfig);
                 break;
         }
     }
@@ -73,21 +70,31 @@ class JobLogger
      */
     private static function createLaravelLogEntry($action, CronJob $job, $logConfig)
     {
-        throw new \Exception("Not implemented yet.");
-    }
+        if (!in_array($action, $logConfig['actions'])) {
+            return;
+        }
 
-    /**
-     * Creates a file based log entry based by cofig
-     *
-     * Todo: Implement
-     *
-     * @param $action
-     * @param CronJob $job
-     * @param $logConfig
-     */
-    private static function createFileLogEntry($action, CronJob $job, $logConfig)
-    {
-        throw new \Exception("Not implemented yet.");
+        $changes = [];
+
+        foreach (self::getChanges($job) as $field => $change) {
+            $changes[] = "The '$field' field modified from '{$change['old']}' to '{$change['new']}'";
+        }
+
+        $logPH = [
+            '%prefix%' => $logConfig['prefix'] ?? "CronBundle",
+            '%datetime%'=> now()->format('Y-m-d H:i:s'),
+            '%userId%' => CronBundle::getUser(),
+            '%jobId%' => $job->id,
+            '%jobName%' => $job->name,
+            '%action%' => $action,
+            '%changes%' => implode('; ', $changes),
+        ];
+
+        $logEntry = $logConfig['logFormat'];
+
+        $logEntry = strtr($logEntry, $logPH);
+
+        \Log::info($logEntry);
     }
 
     /**
